@@ -1,16 +1,4 @@
-/*
- * NB: since truffle-hdwallet-provider 0.0.5 you must wrap HDWallet providers in a
- * function when declaring them. Failure to do so will cause commands to hang. ex:
- * ```
- * mainnet: {
- *     provider: function() {
- *       return new HDWalletProvider(mnemonic, 'https://mainnet.infura.io/<infura-key>')
- *     },
- *     network_id: '1',
- *     gas: 4500000,
- *     gasPrice: 10000000000,
- *   },
- */
+const path = require("path");
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
@@ -19,6 +7,15 @@ module.exports = {
     solc: {
       version: "^0.6.0", // A version or constraint - Ex. "^0.5.0"
       // Can also be set to "native" to use a native solc
+    },
+  },
+  contracts_build_directory: path.join(__dirname, "app/src/contracts"),
+  networks: {
+    develop: {
+      // default with truffle unbox is 7545, but we can use develop to test changes, ex. truffle migrate --network develop
+      host: "127.0.0.1",
+      port: 8545,
+      network_id: "*",
     },
   },
 };
