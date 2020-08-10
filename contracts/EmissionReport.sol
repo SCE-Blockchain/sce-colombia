@@ -30,12 +30,13 @@ contract EmissionReport {
     /**
      * @dev Do stuff, requires tokens
      */
-    function pay() external {
+    function pay(uint amount) external {
         address from = msg.sender;
+        require(reporter == from);
 
-        _token.transferFrom(from, address(this), 1000);
-        _token.burn()
+        _token.transferFrom(from, address(this), amount);
+        _token.burn(amount)
 
-        emit DoneStuff(from);
+        // emit Paid event with amount and from
     }
 }
