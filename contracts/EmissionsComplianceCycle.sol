@@ -10,6 +10,7 @@ contract EmissionsComplianceCycle {
     Roles.Role private _government;
     Roles.Role private _verifiers;
 
+    address[] public verifiers;
     address[] public reports;
 
     constructor(address emissionRightsTokenContract) public {
@@ -26,11 +27,8 @@ contract EmissionsComplianceCycle {
         _;
     }
 
-    function registerVerifier(address verifier) public onlyGovernment {
+    function addVerifier(address verifier) public onlyGovernment {
+        verifiers.push(verifier)
         _verifiers.add(verifier);
-    }
-
-    function getVerifiers() public view returns (Roles.Role) {
-        return _verifiers;
     }
 }

@@ -7,13 +7,12 @@ contract EmissionReport {
     IERC20 private _token;
 
     contract complianceCycleContract;
-    enum State {Reported, Approved, Overdue, Paid};
+    enum State {Reported, Approved, Unapproved, Overdue, Paid};
     State state;
     address reporter;
     string uri;
     uint amount;
     address verifier;
-    string verifierUri;
 
 
     /**

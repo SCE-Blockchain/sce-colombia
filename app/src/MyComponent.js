@@ -62,7 +62,7 @@ export default ({ drizzle, drizzleState }) => {
           drizzle={drizzle}
           contract="EmissionRightsToken"
           method="mint"
-          labels={["Amount to Mint"]}
+          labels={["To Address", "Amount to Mint"]}
         />
         <h3>Distribute Tokens</h3>
         <ContractForm
@@ -70,6 +70,21 @@ export default ({ drizzle, drizzleState }) => {
           contract="EmissionRightsToken"
           method="transfer"
           labels={["To Address", "Amount to Send"]}
+        />
+
+        <h3>Register verifiers</h3>
+        <ContractForm
+          drizzle={drizzle}
+          contract="EmissionsComplianceCycle"
+          method="addVerifier"
+          labels={["Verifier Address"]}
+        />
+        <h3>Registered verifiers</h3>
+        <ContractData
+          drizzle={drizzle}
+          drizzleState={drizzleState}
+          contract="EmissionsComplianceCycle"
+          method="verfifiers"
         />
       </div>
     </div>
