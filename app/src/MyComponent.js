@@ -29,7 +29,7 @@ export default ({ drizzle, drizzleState }) => {
       </div>
 
       <div className="section">
-        <h2>Derechos de Emisión (DDE) Token</h2>
+        <h2>Emission Rights Token of Colombia (ERTCOL)</h2>
         <p>
           <strong>Total Supply: </strong>
           <ContractData
@@ -73,19 +73,41 @@ export default ({ drizzle, drizzleState }) => {
         />
 
         <h3>Register verifiers</h3>
-        <ContractForm
-          drizzle={drizzle}
-          contract="EmissionsComplianceCycle"
-          method="addVerifier"
-          labels={["Verifier Address"]}
-        />
+        {
+          <ContractForm
+            drizzle={drizzle}
+            contract="EmissionsComplianceCycle"
+            method="addVerifier"
+            labels={["Verifier Address"]}
+          />
+        }
         <h3>Registered verifiers</h3>
-        <ContractData
-          drizzle={drizzle}
-          drizzleState={drizzleState}
-          contract="EmissionsComplianceCycle"
-          method="verfifiers"
-        />
+        {
+          <ContractData
+            drizzle={drizzle}
+            drizzleState={drizzleState}
+            contract="EmissionsComplianceCycle"
+            method="getVerifiers"
+          />
+        }
+
+        <h3>Report emissions</h3>
+        {
+          <ContractForm
+            drizzle={drizzle}
+            contract="EmissionsComplianceCycle"
+            method="reportEmissions"
+          />
+        }
+        <h3>Reports</h3>
+        {
+          <ContractData
+            drizzle={drizzle}
+            drizzleState={drizzleState}
+            contract="EmissionsComplianceCycle"
+            method="getReports"
+          />
+        }
       </div>
     </div>
   );
