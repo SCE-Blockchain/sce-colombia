@@ -10,8 +10,10 @@ contract EmissionsComplianceCycle {
     // Access control roles
     Roles.Role private _government;
     Roles.Role private _verifiers;
+    Roles.Role private _emitters;
 
     address[] public verifiers;
+    address[] public emitters;
     EmissionReport[] public reports;
     address private _token;
 
@@ -27,6 +29,11 @@ contract EmissionsComplianceCycle {
         _;
     }
 
+    modifier onlyEmitters() {
+        require(_emitters.has(msg.sender), "Only emitters can call this.");
+        _;
+    }
+
     modifier onlyVerifiers() {
         require(_verifiers.has(msg.sender), "Only verifiers can call this.");
         _;
@@ -37,8 +44,17 @@ contract EmissionsComplianceCycle {
         _verifiers.add(verifier);
     }
 
+    function addEmitter(address emitter) public onlyGovernment {
+        emitters.push(emitter);
+        _emitters.add(emitter);
+    }
+
     function getVerifiers() public view returns (address[] memory) {
         return verifiers;
+    }
+
+    function getEmitters() public view returns (address[] memory) {
+        return emitters;
     }
 
     function hasGovernmentRole(address account) public view returns (bool) {
@@ -49,7 +65,7 @@ contract EmissionsComplianceCycle {
         string memory reportUri,
         uint256 amount,
         address verifier
-    ) public {
+    ) public onlyEmitters {
         require(
             _verifiers.has(verifier),
             "Only registered verifiers can be set."
