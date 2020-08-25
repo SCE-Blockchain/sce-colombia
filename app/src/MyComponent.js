@@ -62,14 +62,14 @@ export default ({ drizzle, drizzleState }) => {
           drizzle={drizzle}
           contract="EmissionRightsToken"
           method="mint"
-          labels={["To Address", "Amount to Mint"]}
+          labels={["To Account", "Amount to Mint"]}
         />
         <h3>Distribute Tokens</h3>
         <ContractForm
           drizzle={drizzle}
           contract="EmissionRightsToken"
           method="transfer"
-          labels={["To Address", "Amount to Send"]}
+          labels={["To Account", "Amount to Send"]}
         />
 
         <h3>Register verifiers</h3>
@@ -78,7 +78,7 @@ export default ({ drizzle, drizzleState }) => {
             drizzle={drizzle}
             contract="EmissionsComplianceCycle"
             method="addVerifier"
-            labels={["Verifier Address"]}
+            labels={["Verifier Account"]}
           />
         }
         <h3>Registered verifiers</h3>
@@ -91,12 +91,32 @@ export default ({ drizzle, drizzleState }) => {
           />
         }
 
+        <h3>Register emitters</h3>
+        {
+          <ContractForm
+            drizzle={drizzle}
+            contract="EmissionsComplianceCycle"
+            method="addEmitter"
+            labels={["Emitter Account"]}
+          />
+        }
+        <h3>Registered emitters</h3>
+        {
+          <ContractData
+            drizzle={drizzle}
+            drizzleState={drizzleState}
+            contract="EmissionsComplianceCycle"
+            method="getEmitters"
+          />
+        }
+
         <h3>Report emissions</h3>
         {
           <ContractForm
             drizzle={drizzle}
             contract="EmissionsComplianceCycle"
             method="reportEmissions"
+            labels={["Report URI", "Reported Amount", "Verifier Account"]}
           />
         }
         <h3>Reports</h3>
@@ -106,6 +126,16 @@ export default ({ drizzle, drizzleState }) => {
             drizzleState={drizzleState}
             contract="EmissionsComplianceCycle"
             method="getReports"
+          />
+        }
+
+        <h3>Approve report</h3>
+        {
+          <ContractForm
+            drizzle={drizzle}
+            contract="EmissionsComplianceCycle"
+            method="approveReport"
+            labels={["Report Address"]}
           />
         }
       </div>
