@@ -53,7 +53,8 @@ contract EmissionReport {
 
     modifier onlyGovernment() {
         require(
-            complianceCycleContract.hasGovernmentRole(msg.sender),
+            complianceCycleContract.hasGovernmentRole(msg.sender) ||
+                msg.sender == address(complianceCycleContract), // Delete the OR when having front for individual reports
             "Only a government account can call this"
         );
         _;

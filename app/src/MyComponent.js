@@ -110,15 +110,6 @@ export default ({ drizzle, drizzleState }) => {
           />
         }
 
-        <h3>Report emissions</h3>
-        {
-          <ContractForm
-            drizzle={drizzle}
-            contract="EmissionsComplianceCycle"
-            method="reportEmissions"
-            labels={["Report URI", "Reported Amount", "Verifier Account"]}
-          />
-        }
         <h3>Reports</h3>
         {
           <ContractData

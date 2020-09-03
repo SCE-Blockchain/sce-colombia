@@ -83,7 +83,7 @@ contract EmissionsComplianceCycle {
     function approveReport(address reportAddress) public onlyGovernment {
         EmissionReport report = EmissionReport(reportAddress);
         report.approve();
-    }
+    } // Remove this function when having GUI for EmissionReport contracts
 
     function getReports() public view returns (EmissionReport[] memory) {
         return reports;
