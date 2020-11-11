@@ -32,12 +32,16 @@ upload report
 ```sh
 # terminal 1
 emissionsComplianceCycle.reportEmissions("https://ipfs.io/ipfs/QmcHfMeVA3R9jPbfg3wcGC6toFhgpA2JtWJsiL55MfbXNd", 1000, verifier1Account, {from: emitter1Account});
-let reportAddress = "0x2ae640E68865403D849B78d8Fa50Db79ef4d3f58";
+let reportAddress = "0xE68A3F65bd2205cBbb5258904adEE315a4e4de68";
 let tokenContract = await EmissionRightsToken.deployed()
 tokenContract.approve(reportAddress, 1000, {from: emitter1Account});
 let report = await EmissionReport.at(reportAddress)
-report.certify("uri", 1000, {from: verifier1Account});
-# report.approve({from: accounts[0]})
+report.state()
+report.amount()
+report.verifier()
+report.uri()
+report.certify("https://ipfs.io/ipfs/QmP5Mzmhc1J61HcwFfDYL3dYFxii6xJMtEhZVqBwLdrree", 1000, {from: verifier1Account});
+report.approve({from: accounts[0]})
 # report.pay(1000, {from: emitter1Account});
 ```
 

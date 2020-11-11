@@ -2,7 +2,9 @@ import React from "react";
 import { DrizzleContext } from "@drizzle/react-plugin";
 import { Drizzle } from "@drizzle/store";
 import drizzleOptions from "./drizzleOptions";
-import MyComponent from "./MyComponent";
+//import MyComponent from "./MyComponent";
+import GovComponent from "./GovComponent";
+//import BankComponent from "./BankComponent";
 import "./App.css";
 
 const drizzle = new Drizzle(drizzleOptions);
@@ -11,20 +13,21 @@ const App = () => {
   return (
     <DrizzleContext.Provider drizzle={drizzle}>
       <DrizzleContext.Consumer>
-        {drizzleContext => {
+        {(drizzleContext) => {
           const { drizzle, drizzleState, initialized } = drizzleContext;
 
           if (!initialized) {
-            return "Loading..."
+            return "Loading...";
           }
 
           return (
-            <MyComponent drizzle={drizzle} drizzleState={drizzleState} />
-          )
+            <GovComponent drizzle={drizzle} drizzleState={drizzleState} />
+            //<BankComponent drizzle={drizzle} drizzleState={drizzleState} />
+          );
         }}
       </DrizzleContext.Consumer>
     </DrizzleContext.Provider>
   );
-}
+};
 
 export default App;

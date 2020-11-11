@@ -18,6 +18,7 @@ export default ({ drizzle, drizzleState }) => {
       </div>
 
       <div className="section">
+        <h2>Gobierno</h2>
         <h2>Active Account</h2>
         <AccountData
           drizzle={drizzle}
@@ -69,52 +70,6 @@ export default ({ drizzle, drizzleState }) => {
             <ContractForm
               drizzle={drizzle}
               contract="EmissionRightsToken"
-              method="transfer"
-              labels={["To Account", "Amount to Send"]}
-            />
-          </div>
-        </div>
-        <div className="column">
-          <div className="section">
-            <h2>Colombian Peso Token (COP)</h2>
-            <p>
-              <strong>Total Supply: </strong>
-              <ContractData
-                drizzle={drizzle}
-                drizzleState={drizzleState}
-                contract="ColombianPesoToken"
-                method="totalSupply"
-                methodArgs={[{ from: drizzleState.accounts[0] }]}
-              />{" "}
-              <ContractData
-                drizzle={drizzle}
-                drizzleState={drizzleState}
-                contract="ColombianPesoToken"
-                method="symbol"
-                hideIndicator
-              />
-            </p>
-            <p>
-              <strong>My Balance: </strong>
-              <ContractData
-                drizzle={drizzle}
-                drizzleState={drizzleState}
-                contract="ColombianPesoToken"
-                method="balanceOf"
-                methodArgs={[drizzleState.accounts[0]]}
-              />
-            </p>
-            <h3>Mint Tokens</h3>
-            <ContractForm
-              drizzle={drizzle}
-              contract="ColombianPesoToken"
-              method="mint"
-              labels={["To Account", "Amount to Mint"]}
-            />
-            <h3>Distribute Tokens</h3>
-            <ContractForm
-              drizzle={drizzle}
-              contract="ColombianPesoToken"
               method="transfer"
               labels={["To Account", "Amount to Send"]}
             />
