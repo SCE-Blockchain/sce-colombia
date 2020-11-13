@@ -40,7 +40,7 @@ export default ({ drizzle, drizzleState }) => {
                 drizzleState={drizzleState}
                 contract="ColombianPesoToken"
                 method="totalSupply"
-                methodArgs={[{ from: drizzleState.accounts[0] }]}
+                methodArgs={[{ from: drizzleState.accounts[1] }]}
               />{" "}
               <ContractData
                 drizzle={drizzle}
@@ -57,7 +57,7 @@ export default ({ drizzle, drizzleState }) => {
                 drizzleState={drizzleState}
                 contract="ColombianPesoToken"
                 method="balanceOf"
-                methodArgs={[drizzleState.accounts[0]]}
+                methodArgs={[drizzleState.accounts[1]]}
               />
             </p>
             <h3>Mint Tokens</h3>

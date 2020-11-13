@@ -5,15 +5,14 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract EmissionRightsMarket {
     struct Order {
-        address placer;
+        address payable placer;
         uint256 amount;
     }
-    struct PriceOrders {
-        uint256 total;
-        Order[] orders;
-    }
-    mapping(uint256 => PriceOrders) public sellOrders; // The selling prices hold the specific orders
-    mapping(uint256 => PriceOrders) public buyOrders; // The buying prices hold the specific orders
+
+    mapping(uint256 => Order[]) public sellOrders;
+    mapping(uint256 => uint256) public sellOrdersTotal;
+    mapping(uint256 => Order[]) public buyOrders;
+    mapping(uint256 => uint256) public buyOrdersTotal;
 
     address private _token;
     address private _cop;
@@ -29,7 +28,7 @@ contract EmissionRightsMarket {
     }
 
     // Makes an offer to trade emissionRightsAmount of emission rights token for
-    function Sell(uint256 emissionRightsAmount, uint256 copSellPrice) public {
+    function sell(uint256 emissionRightsAmount, uint256 copSellPrice) public {
         require(
             IERC20(_token).allowance(msg.sender, address(this)) >=
                 emissionRightsAmount,
@@ -37,34 +36,32 @@ contract EmissionRightsMarket {
         );
 
         // Check buyOrders before doing this:
-        PriceOrders storage priceBuyOrders = buyOrders[copSellPrice];
-        uint256 instantSaleAmount = priceBuyOrders.total >= emissionRightsAmount
+        uint256 instantSaleAmount = buyOrdersTotal[copSellPrice] >=
+            emissionRightsAmount
             ? emissionRightsAmount
-            : priceBuyOrders.total;
+            : buyOrdersTotal[copSellPrice];
         uint256 sellOrderAmount = emissionRightsAmount - instantSaleAmount;
 
         // Execute instant sales with available buy orders
         for (uint256 i = 0; instantSaleAmount > 0; i++) {
-            Order storage order = priceBuyOrders.orders[i];
-            uint256 sellAmount = order.amount;
-            if (order.amount > instantSaleAmount) {
-                order.amount -= instantSaleAmount;
+            address placer = buyOrders[copSellPrice][i].placer;
+            uint256 sellAmount = buyOrders[copSellPrice][i].amount;
+            if (buyOrders[copSellPrice][i].amount > instantSaleAmount) {
+                buyOrders[copSellPrice][i].amount -= instantSaleAmount;
                 sellAmount = instantSaleAmount;
-                instantSaleAmount = 0;
             } else {
-                instantSaleAmount -= order.amount;
-                delete priceBuyOrders.orders[i];
+                delete buyOrders[copSellPrice][i];
             }
+            instantSaleAmount -= sellAmount;
+            buyOrdersTotal[copSellPrice] -= sellAmount;
             IERC20(_cop).transfer(msg.sender, copSellPrice * sellAmount);
-            IERC20(_token).transferFrom(msg.sender, order.placer, sellAmount);
+            IERC20(_token).transferFrom(msg.sender, placer, sellAmount);
         }
 
         // Place sell order if needed
         if (sellOrderAmount > 0) {
-            Order memory order = Order(msg.sender, sellOrderAmount);
-            PriceOrders storage priceSellOrders = sellOrders[copSellPrice];
-            priceSellOrders.orders.push(order);
-            priceSellOrders.total += sellOrderAmount;
+            sellOrders[copSellPrice].push(Order(msg.sender, sellOrderAmount));
+            sellOrdersTotal[copSellPrice] += sellOrderAmount;
 
             IERC20(_token).transferFrom(
                 msg.sender,
@@ -74,9 +71,50 @@ contract EmissionRightsMarket {
         }
     }
 
-    function Buy(uint256 emissionRightsAmount, uint256 copSellPrice) public {
-        PriceOrders storage priceOrders = sellOrders[copSellPrice];
+    function buy(uint256 emissionRightsAmount, uint256 copBuyPrice) public {
+        require(
+            IERC20(_cop).allowance(msg.sender, address(this)) >=
+                emissionRightsAmount * copBuyPrice,
+            "Insufficient allowance set by buyer"
+        );
 
         // Check SellOrders before adding to the orderbook
+        uint256 instantBuyAmount = sellOrdersTotal[copBuyPrice] >=
+            emissionRightsAmount
+            ? emissionRightsAmount
+            : sellOrdersTotal[copBuyPrice];
+        uint256 buyOrderAmount = emissionRightsAmount - instantBuyAmount;
+
+        // Execute instant buys with available sell orders
+        for (uint256 i = 0; instantBuyAmount > 0; i++) {
+            address placer = sellOrders[copBuyPrice][i].placer;
+            uint256 buyAmount = sellOrders[copBuyPrice][i].amount;
+            if (sellOrders[copBuyPrice][i].amount > instantBuyAmount) {
+                sellOrders[copBuyPrice][i].amount -= instantBuyAmount;
+                buyAmount = instantBuyAmount;
+            } else {
+                delete sellOrders[copBuyPrice][i];
+            }
+            instantBuyAmount -= buyAmount;
+            sellOrdersTotal[copBuyPrice] -= buyAmount;
+            IERC20(_token).transfer(msg.sender, buyAmount);
+            IERC20(_cop).transferFrom(
+                msg.sender,
+                placer,
+                copBuyPrice * buyAmount
+            );
+        }
+
+        // Place buy order if needed
+        if (buyOrderAmount > 0) {
+            buyOrders[copBuyPrice].push(Order(msg.sender, buyOrderAmount));
+            buyOrdersTotal[copBuyPrice] += buyOrderAmount;
+
+            IERC20(_cop).transferFrom(
+                msg.sender,
+                address(this),
+                buyOrderAmount * copBuyPrice
+            );
+        }
     }
 }

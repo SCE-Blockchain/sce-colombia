@@ -21,9 +21,20 @@ check tokens in metamask
 ```sh
 # terminal 1
 let accounts = await web3.eth.getAccounts()
-let emitter1Account = accounts[1];
-let verifier1Account = accounts[2];
+let gov = accounts[0];
+let bank = accounts[1];
+let verifier1 = accounts[2];
+let emitter1 = accounts[3];
 let emissionsComplianceCycle = await EmissionsComplianceCycle.deployed()
+let cop = await ColombianPesoToken.deployed()
+let token = await EmissionRightsToken.deployed()
+let market = await EmissionRightsMarket.deployed()
+token.mint(gov, 1000000, {from:gov})
+cop.mint(bank, 1000000, {from: bank})
+token.approve(market.address, 1, {from: gov})
+cop.approve(market.address, 1, {from:bank})
+market.Sell(1,1, {from: gov})
+market.Buy(1,1, {from: bank})
 ```
 
 > ipfs

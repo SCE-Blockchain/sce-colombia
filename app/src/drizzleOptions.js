@@ -2,6 +2,7 @@ import Web3 from "web3";
 import EmissionRightsToken from "./contracts/EmissionRightsToken.json";
 import EmissionsComplianceCycle from "./contracts/EmissionsComplianceCycle.json";
 import ColombianPesoToken from "./contracts/ColombianPesoToken.json";
+import EmissionRightsMarket from "./contracts/EmissionRightsMarket.json";
 
 const options = {
   web3: {
@@ -12,9 +13,11 @@ const options = {
     EmissionRightsToken,
     EmissionsComplianceCycle,
     ColombianPesoToken,
+    EmissionRightsMarket,
   ],
   events: {
     EmissionRightsToken: ["Transfer"],
+    ColombianPesoToken: ["Transfer"],
   },
 };
 
